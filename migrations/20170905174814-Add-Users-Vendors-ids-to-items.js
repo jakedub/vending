@@ -2,31 +2,31 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    "Items",
-    "userId",
-    {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Users",
-        key: "id"
+    return queryInterface.addColumn(
+      "Items",
+      "customerId",
+      {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Customers",
+          key: "id"
+        }
+      },
+      "Items",
+      "vendorId",
+      {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Vendors",
+          key: "id"
       }
-    },
-    "Items",
-    "vendorId",
-    {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Vendors",
-        key: "id"
     }
-  }
-);
+  );
 },
-  },
 
   down: function (queryInterface, Sequelize) {
-    return queryInterface.removeColumn("Items", "vendorId", "userId");
+    return queryInterface.removeColumn("Likes", "customerId", "messageId");
   }
 };
