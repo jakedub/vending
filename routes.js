@@ -23,28 +23,44 @@ router.route('/customer/items')
 })
 //
 // //purchase an item. NOTE Still needs the code for purchasing. Check amount entered, subtract from cost, decrease quantity
-// router.route('/customer/items/:itemId/purchases')
-// .post(function(req, res){
-//   models.Item.findById().then(function(err,items){
-//     if (err){
-//       res.send(err);
-//     } else {
-//       res.json({items})
-//     }
-//   })
-// })
+router.route('/customer/items/:itemId/purchases')
+.post(function(req, res){
+  models.Item.findById().then(function(err,items){
+    if (err){
+      res.send(err);
+    } else {
+      res.json({items})
+    }
+  })
+})
+
+models.Item.findById(req.params.item_id).then(function(err,items){
+  if (err){
+    res.send(err);
+  } else{
+    models.Items.save(changes).then(function(changes))
+
+
+  }
+})
+let changes = {
+  item.purchase_date = now(),
+  item.quantity = req.body.quantity,
+  machine.total = req.body.cost
+}
+
 //
 // //display to vendor all purchases. NOTE Still needs code to display all purchases
-// router.route('/vendor/purchases')
-// .get(function(req, res){
-//   models.Item.findAll().then(function(err,items){
-//     if (err){
-//       res.send(err);
-//     } else {
-//       res.send({models.Item.sum({cost})});
-//     }
-//   })
-// })
+router.route('/vendor/purchases')
+.get(function(req, res){
+  models.Item.findAll({where: {purchase_date: not null}}).then(function(err,items){
+    if (err){
+      res.send(err);
+    } else {
+      res.send({models.Item.sum({cost})});
+    }
+  })
+})
 
 
 //
@@ -76,39 +92,39 @@ router.route('/customer/items')
 //
 
 //update an item
-router.route('/vendor/items/itemsId')
-.get(function(req,res){
-  models.Item.findById(req.params.item_id, function(err,item){
-    if (err){
-      res.send(err);
-    } else {
-      res.send(item);
-    }
-  })
-})
-.put(function(req, res){
-  let update = [{
-  item.description = req.body.description,
-  item.quantity = req.body.quantity,
-  item.cost = req.body.cost
-}];
-  models.Item.findById(req.params.item_id, function(err, item){
-    if (err){
-      res.send(err);
-    } else{
-    models.Item.save({update}).then(function(update){
-      return models.Item.findAll();
-    }). then(function(items){
-      console.log(items.map(function(item){
-        return item.description;
-      }));
-    })
-    res.json({message: 'Item updated'});
-        }
-      })
-    }
-  })
-});
+// router.route('/vendor/items/itemsId')
+// .get(function(req,res){
+//   models.Item.findById(req.params.item_id, function(err,item){
+//     if (err){
+//       res.send(err);
+//     } else {
+//       res.send(item);
+//     }
+//   })
+// })
+// .put(function(req, res){
+//   let update = [{
+//   item.description = req.body.description,
+//   item.quantity = req.body.quantity,
+//   item.cost = req.body.cost
+// }];
+//   models.Item.findById(req.params.item_id, function(err, item){
+//     if (err){
+//       res.send(err);
+//     } else{
+//     models.Item.save({update}).then(function(update){
+//       return models.Item.findAll();
+//     }). then(function(items){
+//       console.log(items.map(function(item){
+//         return item.description;
+//       }));
+//     })
+//     res.json({message: 'Item updated'});
+//         }
+//       })
+//     }
+//   })
+// });
 
 
 router.get('/', function(req, res) {
